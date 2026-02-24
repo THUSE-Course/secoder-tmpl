@@ -1,8 +1,8 @@
-.buildkit-rootless-base:
+.buildkit:
   image:
     name: moby/buildkit:rootless
     entrypoint: [""]
-  stage: build
+  stage: deploy
   variables:
     BUILDKITD_FLAGS: --oci-worker-no-process-sandbox
     BUILDKIT_FRONTEND: dockerfile.v0

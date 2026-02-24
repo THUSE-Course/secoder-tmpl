@@ -1,4 +1,4 @@
-.kubectl-apply-kustomize-base:
+.kustomize:
   image:
     name: alpine/k8s:1.35.1
     entrypoint: [""]
@@ -12,7 +12,6 @@
       : "${KUBERNETES_SERVICE_HOST:?not running in k8s?}"
       : "${KUBERNETES_SERVICE_PORT:?not running in k8s?}"
       export KUBECTL_APPLYSET=true
-      NAMESPACE="u-$(echo "${CI_PROJECT_PATH:-}" | awk -F/ '{print $(NF-1)}')"
       kubectl \
         --token="${TOKEN}" \
         -n "${NAMESPACE}" \
