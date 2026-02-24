@@ -1,3 +1,6 @@
 resources:
   - backend/
   - frontend/
+labels:
+  - pairs:
+      app.kubernetes.io/managed-by: gitops-ci
