@@ -8,6 +8,11 @@ labels:
       app.kubernetes.io/instance: secoder
     includeSelectors: true
     includeTemplates: true
+    fields:
+      - group: monitoring.coreos.com
+        kind: ServiceMonitor
+        path: spec/selector/matchLabels
+        create: true
 configMapGenerator:
   - name: secgit-dashboard
     files:

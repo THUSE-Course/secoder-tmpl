@@ -9,7 +9,7 @@ spec:
       scrapeTimeout: 5s
       port: http-metrics
   jobLabel: app.kubernetes.io/component
-  selector:
-    matchLabels:
-      app.kubernetes.io/component: core
-      app.kubernetes.io/instance: secoder
+  # selector:
+  #   matchLabels:
+  #     app.kubernetes.io/component: core
+  #     app.kubernetes.io/instance: secoder
