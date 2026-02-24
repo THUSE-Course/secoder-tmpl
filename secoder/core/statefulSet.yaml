@@ -6,6 +6,7 @@ spec:
   replicas: 1
   template:
     spec:
+      serviceAccountName: secoder-core
       containers:
         - image: "localhost/backend:latest"
           imagePullPolicy: IfNotPresent
@@ -20,6 +21,10 @@ spec:
           volumeMounts:
             - mountPath: /srv
               name: data
+            - name: config
+              mountPath: /etc/config.json
+              subPath: config.json
+              readOnly: true
         - image: "localhost/frontend:latest"
           imagePullPolicy: IfNotPresent
           name: frontend
@@ -37,6 +42,13 @@ spec:
               value: https://headlamp.secoder.net
             - name: VITE_GRAFANA_URL
               value: https://grafana.secoder.net
+      volumes:
+        - name: config
+          configMap:
+            name: backend
+            items:
+              - key: config.json
+                path: config.json
   volumeClaimTemplates:
     - metadata:
         name: data

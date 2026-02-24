@@ -1,0 +1,105 @@
+apiVersion: policies.kyverno.io/v1
+kind: GeneratingPolicy
+metadata:
+  name: secoder-group
+spec:
+  evaluation:
+    generateExisting:
+      enabled: true
+    synchronize:
+      enabled: true
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: ["v1"]
+        operations: ["CREATE", "UPDATE"]
+        resources: ["namespaces"]
+  matchConditions:
+    - name: secoder
+      expression: "'secoder' in object.metadata.labels"
+    - name: group
+      expression: "object.metadata.name.startsWith('g-')"
+  variables:
+    - name: ns
+      expression: "object.metadata.name"
+    - name: targets
+      expression: "object.metadata.labels['secoder'].split('.')"
+  generate:
+    - expression: |
+        variables.targets.all(i,
+          generator.Apply(string(variables.ns), [
+            {
+              "kind": dyn("RoleBinding"),
+              "apiVersion": dyn("rbac.authorization.k8s.io/v1"),
+              "metadata": dyn({
+                "name": dyn(string(i) + "-edit")
+              }),
+              "roleRef": dyn({
+                "apiGroup": dyn("rbac.authorization.k8s.io"),
+                "kind": dyn("ClusterRole"),
+                "name": dyn("secoder-user-edit")
+              }),
+              "subjects": dyn([
+                {
+                  "kind": dyn("ServiceAccount"),
+                  "name": dyn("default"),
+                  "namespace": dyn(string(i))
+                }
+              ])
+            }
+          ])
+        )
+    - expression: |
+        generator.Apply(string(variables.ns), [
+          {
+            "kind": dyn("ResourceQuota"),
+            "apiVersion": dyn("v1"),
+            "metadata": dyn({
+              "name": dyn("secoder-user-quota")
+            }),
+            "spec": dyn({
+              "hard": dyn({
+                "pods": dyn("10"),
+                "requests.cpu": dyn("2"),
+                "requests.memory": dyn("10Gi"),
+                "limits.cpu": dyn("2"),
+                "limits.memory": dyn("10Gi"),
+                "requests.storage": dyn("10Gi"),
+                "persistentvolumeclaims": dyn("5"),
+                "services": dyn("10"),
+                "secrets": dyn("50"),
+                "configmaps": dyn("50")
+              })
+            })
+          },
+          {
+            "kind": dyn("LimitRange"),
+            "apiVersion": dyn("v1"),
+            "metadata": dyn({
+              "name": dyn("secoder-default-limits")
+            }),
+            "spec": dyn({
+              "limits": dyn([
+                {
+                  "type": dyn("Container"),
+                  "defaultRequest": dyn({
+                    "cpu": dyn("50m"),
+                    "memory": dyn("128Mi")
+                  }),
+                  "default": dyn({
+                    "cpu": dyn("200m"),
+                    "memory": dyn("256Mi")
+                  }),
+                  "max": dyn({
+                    "cpu": dyn("1"),
+                    "memory": dyn("1Gi")
+                  }),
+                  "maxLimitRequestRatio": dyn({
+                    "cpu": dyn("4"),
+                    "memory": dyn("4")
+                  })
+                }
+              ])
+            })
+          }
+        ])

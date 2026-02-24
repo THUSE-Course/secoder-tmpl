@@ -1,0 +1,4 @@
+resources:
+  - generate-secoder-group.yaml
+  - generate-secoder-user.yaml
+  - validate-secoder-route.yaml

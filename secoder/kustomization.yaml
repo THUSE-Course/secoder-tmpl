@@ -3,3 +3,5 @@ resources:
   - reconciler/
   - exporter/
   - route/
+  - rbac/
+  - policy/

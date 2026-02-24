@@ -5,9 +5,6 @@
   stage: deploy
   variables:
     KUSTOMIZE_PATH: .
-    KUBE_CONTEXT_NAME: ci
-    KUBE_CLUSTER_NAME: ci
-    KUBE_USER_NAME: sa-token
   script:
     - |
       set -eu

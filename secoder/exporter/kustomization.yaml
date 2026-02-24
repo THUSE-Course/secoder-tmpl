@@ -11,7 +11,7 @@ labels:
 configMapGenerator:
   - name: secgit-dashboard
     files:
-      - secgit-dashboard.json=dashboard.json
+      - secgit.json=dashboard.json
     options:
       labels:
         grafana_dashboard: "1"

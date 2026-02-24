@@ -1,0 +1,3 @@
+resources:
+  - secoder-user-view.yaml
+  - secoder-user-edit.yaml

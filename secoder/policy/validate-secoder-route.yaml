@@ -1,0 +1,32 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: secoder-route
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+      - apiGroups: ["gateway.networking.k8s.io"]
+        apiVersions: ["v1"]
+        operations: ["CREATE", "UPDATE"]
+        resources: ["httproutes"]
+  matchConditions:
+    - name: format
+      expression: "object.metadata.namespace.startsWith('u-') || object.metadata.namespace.startsWith('g-')"
+  validations:
+    - expression: "object.spec.hostnames.all(name, name.startsWith(object.metadata.namespace))"
+      messageExpression: "'object.spec.hostnames must start with ' + string(object.metadata.namespace)"
+      reason: Invalid
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: secoder-route
+spec:
+  policyName: secoder-route
+  validationActions: [Deny]
+  matchResources:
+    namespaceSelector:
+      matchExpressions:
+        - key: secoder
+          operator: Exists

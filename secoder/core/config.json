@@ -1,0 +1,10 @@
+{
+  "database": "/srv/secoder.db",
+  "user": "/srv/users.json",
+  "webhook": {
+    "url": "http://reconciler:8000"
+  },
+  "rbac": {
+    "clusterrole": "secoder-user-view"
+  }
+}
