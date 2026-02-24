@@ -1,0 +1,24 @@
+.buildkit-rootless-base:
+  image:
+    name: moby/buildkit:rootless
+    entrypoint: [""]
+  stage: build
+  variables:
+    BUILDKITD_FLAGS: --oci-worker-no-process-sandbox
+    BUILDKIT_FRONTEND: dockerfile.v0
+    BUILDKIT_CONTEXT: .
+    BUILDKIT_DOCKERFILE_DIR: .
+    BUILDKIT_IMAGE_NAME: $CI_REGISTRY_IMAGE
+    BUILDKIT_IMAGE_TAG: $CI_COMMIT_SHA
+    BUILDKIT_OUTPUT_TYPE: image
+    BUILDKIT_PUSH: "true"
+  before_script:
+    - mkdir -p ~/.docker
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > ~/.docker/config.json
+  script:
+    - |
+      buildctl-daemonless.sh build \
+        --frontend "${BUILDKIT_FRONTEND}" \
+        --local context="${BUILDKIT_CONTEXT}" \
+        --local dockerfile="${BUILDKIT_DOCKERFILE_DIR}" \
+        --output type="${BUILDKIT_OUTPUT_TYPE}",name="${BUILDKIT_IMAGE_NAME}:${BUILDKIT_IMAGE_TAG}",push="${BUILDKIT_PUSH}"

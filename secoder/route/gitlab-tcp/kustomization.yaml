@@ -1,0 +1,8 @@
+resources:
+  - ../tcp-tmpl/
+patches:
+  - path: tcp.yaml
+    options:
+      allowNameChange: true
+    target:
+      kind: TCPRoute

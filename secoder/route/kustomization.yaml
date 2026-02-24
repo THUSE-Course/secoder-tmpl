@@ -1,0 +1,6 @@
+resources:
+  - core-http/
+  - gitlab-http/
+  - gitlab-tcp/
+  - sonar-http/
+  - registry-http/

@@ -1,0 +1,8 @@
+resources:
+  - statefulset.yaml
+  - service.yaml
+labels:
+  - pairs:
+      app.kubernetes.io/component: backend
+    includeSelectors: true
+    includeTemplates: true

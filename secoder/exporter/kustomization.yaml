@@ -1,0 +1,17 @@
+resources:
+  - deployment.yaml
+  - service.yaml
+  - serviceMonitor.yaml
+labels:
+  - pairs:
+      app.kubernetes.io/conponent: exporter
+      app.kubernetes.io/instance: secoder
+    includeSelectors: true
+    includeTemplates: true
+configMapGenerator:
+  - name: secgit-dashboard
+    files:
+      - secgit-dashboard.json=dashboard.json
+    options:
+      labels:
+        grafana_dashboard: "1"

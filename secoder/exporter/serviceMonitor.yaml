@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: secgit
+spec:
+  endpoints:
+    - interval: 60s
+      path: /metrics
+      scrapeTimeout: 5s
+      port: http-metrics
+  jobLabel: app.kubernetes.io/component
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: exporter
+      app.kubernetes.io/instance: secoder

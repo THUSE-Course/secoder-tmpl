@@ -1,0 +1,9 @@
+resources:
+  - deployment.yaml
+  - service.yaml
+labels:
+  - pairs:
+      app.kubernetes.io/component: reconciler
+      app.kubernetes.io/instance: secoder
+    includeSelectors: true
+    includeTemplates: true

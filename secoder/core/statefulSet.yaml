@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: core
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - image: "localhost/backend:latest"
+          imagePullPolicy: IfNotPresent
+          name: backend
+          ports:
+            - containerPort: 8080
+              name: backend
+              protocol: TCP
+            - containerPort: 9090
+              name: http-metrics
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /srv
+              name: data
+        - image: "localhost/frontend:latest"
+          imagePullPolicy: IfNotPresent
+          name: frontend
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          env:
+            - name: VITE_API_ENDPOINT
+              value: https://secoder.net/api
+            - name: VITE_GITLAB_URL
+              value: https://gitlab.secoder.net
+            - name: VITE_SONARQUBE_URL
+              value: https://sonar.secoder.net
+            - name: VITE_DASHBOARD_URL
+              value: https://headlamp.secoder.net
+            - name: VITE_GRAFANA_URL
+              value: https://grafana.secoder.net
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteMany
+        resources:
+          requests:
+            storage: 1Gi
+        storageClassName: nfs-retain

@@ -1,0 +1,15 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reconciler
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - image: "localhost/reconciler:latest"
+          imagePullPolicy: IfNotPresent
+          name: reconciler
+          ports:
+            - containerPort: 8000
+              protocol: TCP

@@ -1,0 +1,17 @@
+resources:
+  - statefulSet.yaml
+  - service.yaml
+  - serviceMonitor.yaml
+labels:
+  - pairs:
+      app.kubernetes.io/component: core
+      app.kubernetes.io/instance: secoder
+    includeSelectors: true
+    includeTemplates: true
+configMapGenerator:
+  - name: secoder-dashboard
+    files:
+      - secoder-dashboard.json=dashboard.json
+    options:
+      labels:
+        grafana_dashboard: "1"
