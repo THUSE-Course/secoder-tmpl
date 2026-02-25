@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  template:
+    spec:
+      containers:
+        - name: nginx
+          # the above values locate the resources to patch
+          # you can safely ignore them
+          #
+          # set an environment variable, override if already exisits
+          env:
+            - name: EXAMPLE_KEY
+              value: hello,world

@@ -1,0 +1,6 @@
+resources:
+  - git@github.com:THUSE-Course/secoder-tmpl.git/deploy/basic/
+patches:
+  - path: route.yaml
+  - path: frontend.yaml
+  - path: backend.yaml
