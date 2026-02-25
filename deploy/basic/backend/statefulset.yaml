@@ -7,8 +7,8 @@ spec:
   template:
     spec:
       containers:
-        - name: podinfo
-          image: ghcr.io/stefanprodan/podinfo:6.6.3
+        - name: backend
+          image: nginx:alpine
           ports:
-            - containerPort: 9898
+            - containerPort: 80
               name: http

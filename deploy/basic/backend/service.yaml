@@ -6,7 +6,7 @@ spec:
   clusterIP: None
   ports:
     - name: http
-      port: 9898
+      port: 80
       targetPort: http
 ---
 apiVersion: v1
@@ -16,5 +16,5 @@ metadata:
 spec:
   ports:
     - name: http
-      port: 9898
+      port: 80
       targetPort: http

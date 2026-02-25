@@ -1,0 +1,8 @@
+resources:
+  - ../../route/
+patches:
+  - path: http.yaml
+    options:
+      allowNameChange: true
+    target:
+      kind: HTTPRoute
