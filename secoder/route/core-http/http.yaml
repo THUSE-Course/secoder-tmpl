@@ -22,7 +22,6 @@ spec:
         - path:
             type: PathPrefix
             value: /api
-            filters:
       filters:
         - type: URLRewrite
           urlRewrite:
