@@ -1,3 +1,6 @@
+# Inline this template directly into the project's .gitlab-ci.yml.
+# Do not use a GitLab include: block for this file; external template fetches
+# are unreliable on the SECoder runner network.
 .buildkit:
   image:
     name: moby/buildkit:rootless
