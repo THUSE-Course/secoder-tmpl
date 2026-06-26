@@ -4,6 +4,9 @@
   "webhook": {
     "url": "http://reconciler:8000"
   },
+  "jwt": {
+    "ttl": 604800
+  },
   "rbac": {
     "clusterrole": "secoder-user-view",
     "root_clusterrole": "cluster-admin"

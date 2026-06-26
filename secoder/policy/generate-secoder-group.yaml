@@ -49,6 +49,11 @@ spec:
             }
           ])
         )
+    # Users are given smaller request quotas and larger limit quotas so the
+    # cluster can accommodate more users while allowing short bursts.
+    # g-* namespace quota totals: requests 256m CPU / 512Mi memory, limits
+    # 8 CPU / 16Gi memory. LimitRange supplies defaults but does not enforce a
+    # per-container max; ResourceQuota enforces only the namespace aggregate.
     - expression: |
         generator.Apply(string(variables.ns), [
           {
@@ -60,10 +65,10 @@ spec:
             "spec": dyn({
               "hard": dyn({
                 "pods": dyn("10"),
-                "requests.cpu": dyn("2"),
-                "requests.memory": dyn("10Gi"),
-                "limits.cpu": dyn("2"),
-                "limits.memory": dyn("10Gi"),
+                "requests.cpu": dyn("256m"),
+                "requests.memory": dyn("512Mi"),
+                "limits.cpu": dyn("8"),
+                "limits.memory": dyn("16Gi"),
                 "requests.storage": dyn("10Gi"),
                 "persistentvolumeclaims": dyn("5"),
                 "services": dyn("10"),
@@ -84,19 +89,11 @@ spec:
                   "type": dyn("Container"),
                   "defaultRequest": dyn({
                     "cpu": dyn("50m"),
-                    "memory": dyn("128Mi")
+                    "memory": dyn("100Mi")
                   }),
                   "default": dyn({
-                    "cpu": dyn("200m"),
-                    "memory": dyn("256Mi")
-                  }),
-                  "max": dyn({
-                    "cpu": dyn("1"),
-                    "memory": dyn("1Gi")
-                  }),
-                  "maxLimitRequestRatio": dyn({
-                    "cpu": dyn("4"),
-                    "memory": dyn("4")
+                    "cpu": dyn("1024m"),
+                    "memory": dyn("4Gi")
                   })
                 }
               ])
