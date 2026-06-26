@@ -4,3 +4,4 @@ patches:
   - path: route.yaml
   - path: frontend.yaml
   - path: backend.yaml
+  - path: pvc.yaml
