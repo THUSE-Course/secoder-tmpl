@@ -5,6 +5,6 @@ metadata:
 spec:
   parentRefs:
     - kind: Gateway
-      name: traefik
+      name: traefik-gateway
       namespace: infra
       sectionName: ssh
