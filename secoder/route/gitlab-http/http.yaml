@@ -6,6 +6,12 @@ spec:
   hostnames:
     - gitlab.secoder.net
   rules:
-    - backendRefs:
+    - filters:
+        - type: RequestHeaderModifier
+          requestHeaderModifier:
+            set:
+              - name: X-Forwarded-Proto
+                value: https
+      backendRefs:
         - name: gitlab-webservice-default
           port: 8181
