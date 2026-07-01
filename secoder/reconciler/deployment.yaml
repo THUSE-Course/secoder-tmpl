@@ -7,7 +7,7 @@ spec:
   template:
     spec:
       containers:
-        - image: "localhost/reconciler:latest"
+        - image: "ghcr.io/thuse-course/secoder-reconciler:0.1.0"
           imagePullPolicy: IfNotPresent
           name: reconciler
           ports:

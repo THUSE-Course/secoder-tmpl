@@ -25,7 +25,7 @@ spec:
               mountPath: /etc/config.json
               subPath: config.json
               readOnly: true
-        - image: "localhost/frontend:latest"
+        - image: "ghcr.io/thuse-course/secoder-frontend:0.1.0"
           imagePullPolicy: IfNotPresent
           name: frontend
           ports:
