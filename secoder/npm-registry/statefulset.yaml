@@ -23,7 +23,7 @@ spec:
         runAsUser: 10001
       containers:
         - name: npm-registry
-          image: ghcr.io/thuse-course/secoder-registry:0.1.1
+          image: ghcr.io/thuse-course/secoder-registry:latest
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
