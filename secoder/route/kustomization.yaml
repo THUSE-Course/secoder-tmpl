@@ -5,3 +5,4 @@ resources:
   - pypi-http/
   - sonar-http/
   - registry-http/
+  - npm-registry-http/

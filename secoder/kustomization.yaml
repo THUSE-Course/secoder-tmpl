@@ -1,6 +1,7 @@
 resources:
   - core/
   - devpi/
+  - npm-registry/
   - reconciler/
   - exporter/
   - route/

@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: npm-registry
+  labels:
+    app.kubernetes.io/name: npm-registry
+spec:
+  serviceName: npm-registry
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: npm-registry
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: npm-registry
+    spec:
+      securityContext:
+        fsGroup: 10001
+        fsGroupChangePolicy: OnRootMismatch
+        runAsGroup: 10001
+        runAsNonRoot: true
+        runAsUser: 10001
+      containers:
+        - name: npm-registry
+          image: ghcr.io/thuse-course/secoder-registry:0.1.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 4873
+          readinessProbe:
+            httpGet:
+              path: /-/ping
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /-/ping
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 2Gi
+          volumeMounts:
+            - name: npm-registry-data
+              mountPath: /verdaccio/storage
+  volumeClaimTemplates:
+    - metadata:
+        name: npm-registry-data
+      spec:
+        storageClassName: nfs-retain
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 20Gi
