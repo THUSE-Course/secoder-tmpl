@@ -8,7 +8,7 @@ spec:
     spec:
       serviceAccountName: secoder-core
       containers:
-        - image: "localhost/backend:latest"
+        - image: "ghcr.io/thuse-course/secoder-backend:latest"
           imagePullPolicy: IfNotPresent
           name: backend
           ports:
@@ -25,7 +25,7 @@ spec:
               mountPath: /etc/config.json
               subPath: config.json
               readOnly: true
-        - image: "ghcr.io/thuse-course/secoder-frontend:0.1.0"
+        - image: "ghcr.io/thuse-course/secoder-frontend:latest"
           imagePullPolicy: IfNotPresent
           name: frontend
           ports:

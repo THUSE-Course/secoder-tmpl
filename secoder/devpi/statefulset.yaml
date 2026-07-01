@@ -23,7 +23,7 @@ spec:
         runAsUser: 10001
       containers:
         - name: devpi
-          image: ghcr.io/thuse-course/secoder-pypi:0.1.0
+          image: ghcr.io/thuse-course/secoder-pypi:latest
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
