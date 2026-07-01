@@ -1,0 +1,60 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: pypi
+spec:
+  hostnames:
+    - pypi.secoder.net
+  rules:
+    - matches:
+        - path:
+            type: Exact
+            value: /+simple
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplaceFullPath
+              replaceFullPath: /root/pypi/+simple/
+      backendRefs:
+        - name: devpi
+          port: 3141
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /+simple/
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /root/pypi/+simple/
+      backendRefs:
+        - name: devpi
+          port: 3141
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /+f/
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /root/pypi
+      backendRefs:
+        - name: devpi
+          port: 3141
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /%2Bf/
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /root/pypi
+      backendRefs:
+        - name: devpi
+          port: 3141

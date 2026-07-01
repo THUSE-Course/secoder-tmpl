@@ -2,5 +2,6 @@ resources:
   - core-http/
   - gitlab-http/
   - gitlab-tcp/
+  - pypi-http/
   - sonar-http/
   - registry-http/
