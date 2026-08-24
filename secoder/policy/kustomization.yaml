@@ -1,4 +1,7 @@
 resources:
+  - generate-tenant-network-isolation.yaml
   - generate-secoder-group.yaml
   - generate-secoder-user.yaml
+  - validate-secoder-pod-security.yaml
+  - validate-secoder-pvc.yaml
   - validate-secoder-route.yaml

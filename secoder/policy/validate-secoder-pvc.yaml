@@ -1,0 +1,32 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: secoder-pvc
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: ["v1"]
+        operations: ["CREATE", "UPDATE"]
+        resources: ["persistentvolumeclaims"]
+  matchConditions:
+    - name: format
+      expression: "object.metadata.namespace.startsWith('u-') || object.metadata.namespace.startsWith('g-')"
+  validations:
+    - expression: "has(object.spec.storageClassName) && object.spec.storageClassName in ['nfs-tmp']"
+      message: "PVC spec.storageClassName must be one of: nfs-tmp"
+      reason: Invalid
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: secoder-pvc
+spec:
+  policyName: secoder-pvc
+  validationActions: [Deny]
+  matchResources:
+    namespaceSelector:
+      matchExpressions:
+        - key: secoder
+          operator: Exists

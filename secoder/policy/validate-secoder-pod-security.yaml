@@ -1,0 +1,59 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: secoder-pod-security
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: ["v1"]
+        operations: ["CREATE", "UPDATE"]
+        resources: ["pods"]
+  matchConditions:
+    - name: format
+      expression: "object.metadata.namespace.startsWith('u-') || object.metadata.namespace.startsWith('g-')"
+  validations:
+    - expression: "!has(object.spec.hostNetwork) || object.spec.hostNetwork == false"
+      message: "Pod spec.hostNetwork is not allowed in SECoder tenant namespaces"
+      reason: Invalid
+    - expression: "!has(object.spec.hostPID) || object.spec.hostPID == false"
+      message: "Pod spec.hostPID is not allowed in SECoder tenant namespaces"
+      reason: Invalid
+    - expression: "!has(object.spec.hostIPC) || object.spec.hostIPC == false"
+      message: "Pod spec.hostIPC is not allowed in SECoder tenant namespaces"
+      reason: Invalid
+    - expression: "!has(object.spec.volumes) || object.spec.volumes.all(v, !has(v.hostPath))"
+      message: "hostPath volumes are not allowed in SECoder tenant namespaces"
+      reason: Invalid
+    - expression: "object.spec.containers.all(c, !has(c.ports) || c.ports.all(p, !has(p.hostPort) || p.hostPort == 0))"
+      message: "Container hostPort is not allowed in SECoder tenant namespaces"
+      reason: Invalid
+    - expression: "!has(object.spec.initContainers) || object.spec.initContainers.all(c, !has(c.ports) || c.ports.all(p, !has(p.hostPort) || p.hostPort == 0))"
+      message: "Init container hostPort is not allowed in SECoder tenant namespaces"
+      reason: Invalid
+    - expression: "!has(object.spec.ephemeralContainers) || object.spec.ephemeralContainers.all(c, !has(c.ports) || c.ports.all(p, !has(p.hostPort) || p.hostPort == 0))"
+      message: "Ephemeral container hostPort is not allowed in SECoder tenant namespaces"
+      reason: Invalid
+    - expression: "object.spec.containers.all(c, !has(c.securityContext) || !has(c.securityContext.privileged) || c.securityContext.privileged == false)"
+      message: "Privileged containers are not allowed in SECoder tenant namespaces"
+      reason: Invalid
+    - expression: "!has(object.spec.initContainers) || object.spec.initContainers.all(c, !has(c.securityContext) || !has(c.securityContext.privileged) || c.securityContext.privileged == false)"
+      message: "Privileged init containers are not allowed in SECoder tenant namespaces"
+      reason: Invalid
+    - expression: "!has(object.spec.ephemeralContainers) || object.spec.ephemeralContainers.all(c, !has(c.securityContext) || !has(c.securityContext.privileged) || c.securityContext.privileged == false)"
+      message: "Privileged ephemeral containers are not allowed in SECoder tenant namespaces"
+      reason: Invalid
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: secoder-pod-security
+spec:
+  policyName: secoder-pod-security
+  validationActions: [Deny]
+  matchResources:
+    namespaceSelector:
+      matchExpressions:
+        - key: secoder
+          operator: Exists

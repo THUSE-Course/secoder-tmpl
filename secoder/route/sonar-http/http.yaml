@@ -7,5 +7,5 @@ spec:
     - sonar.secoder.net
   rules:
     - backendRefs:
-        - name: sonarqube-sonarqube
+        - name: sonar-sonarqube
           port: 9000

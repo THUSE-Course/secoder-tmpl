@@ -31,6 +31,17 @@ spec:
           ports:
             - containerPort: 80
               protocol: TCP
+          env:
+            - name: VITE_API_ENDPOINT
+              value: https://t.secoder.net/api
+            - name: VITE_GITLAB_URL
+              value: https://gitlab.t.secoder.net
+            - name: VITE_SONARQUBE_URL
+              value: https://sonar.t.secoder.net
+            - name: VITE_DASHBOARD_URL
+              value: https://headlamp.t.secoder.net
+            - name: VITE_GRAFANA_URL
+              value: https://grafana.t.secoder.net
       volumes:
         - name: config
           configMap:

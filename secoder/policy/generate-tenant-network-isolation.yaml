@@ -1,0 +1,141 @@
+apiVersion: policies.kyverno.io/v1
+kind: GeneratingPolicy
+metadata:
+  name: secoder-tenant-network-isolation
+spec:
+  evaluation:
+    generateExisting:
+      enabled: true
+    synchronize:
+      enabled: true
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: ["v1"]
+        operations: ["CREATE", "UPDATE"]
+        resources: ["namespaces"]
+  matchConditions:
+    - name: secoder
+      expression: "'secoder' in object.metadata.labels"
+    - name: tenant
+      expression: object.metadata.name.startsWith('u-') || object.metadata.name.startsWith('g-')
+  variables:
+    - name: ns
+      expression: object.metadata.name
+  generate:
+    - expression: |
+        generator.Apply(string(variables.ns), [
+          {
+            "kind": dyn("NetworkPolicy"),
+            "apiVersion": dyn("networking.k8s.io/v1"),
+            "metadata": dyn({
+              "name": dyn("secoder-tenant-network-isolation")
+            }),
+            "spec": dyn({
+              "podSelector": dyn({}),
+              "policyTypes": dyn([
+                "Ingress",
+                "Egress"
+              ]),
+              "ingress": dyn([
+                {
+                  "from": dyn([
+                    {
+                      "podSelector": dyn({})
+                    }
+                  ])
+                },
+                {
+                  "from": dyn([
+                    {
+                      "namespaceSelector": dyn({
+                        "matchLabels": dyn({
+                          "kubernetes.io/metadata.name": dyn("infra")
+                        })
+                      })
+                    }
+                  ])
+                }
+              ]),
+              "egress": dyn([
+                {
+                  "to": dyn([
+                    {
+                      "podSelector": dyn({})
+                    }
+                  ])
+                },
+                {
+                  "to": dyn([
+                    {
+                      "namespaceSelector": dyn({
+                        "matchLabels": dyn({
+                          "kubernetes.io/metadata.name": dyn("kube-system")
+                        })
+                      }),
+                      "podSelector": dyn({
+                        "matchExpressions": dyn([
+                          {
+                            "key": dyn("k8s-app"),
+                            "operator": dyn("In"),
+                            "values": dyn([
+                              "kube-dns"
+                            ])
+                          }
+                        ])
+                      })
+                    }
+                  ]),
+                  "ports": dyn([
+                    {
+                      "protocol": dyn("UDP"),
+                      "port": dyn(53)
+                    },
+                    {
+                      "protocol": dyn("TCP"),
+                      "port": dyn(53)
+                    }
+                  ])
+                },
+                {
+                  "to": dyn([
+                    {
+                      "ipBlock": dyn({
+                        "cidr": dyn("10.32.0.1/32")
+                      })
+                    }
+                  ]),
+                  "ports": dyn([
+                    {
+                      "protocol": dyn("TCP"),
+                      "port": dyn(443)
+                    }
+                  ])
+                },
+                {
+                  "to": dyn([
+                    {
+                      "ipBlock": dyn({
+                        "cidr": dyn("0.0.0.0/0"),
+                        "except": dyn([
+                          "0.0.0.0/8",
+                          "10.0.0.0/8",
+                          "100.64.0.0/10",
+                          "127.0.0.0/8",
+                          "169.254.0.0/16",
+                          "172.16.0.0/12",
+                          "192.0.0.0/24",
+                          "192.168.0.0/16",
+                          "198.18.0.0/15",
+                          "224.0.0.0/4",
+                          "240.0.0.0/4",
+                          "255.255.255.255/32"
+                        ])
+                      })
+                    }
+                  ])
+                }
+              ])
+            })
+          }
+        ])
