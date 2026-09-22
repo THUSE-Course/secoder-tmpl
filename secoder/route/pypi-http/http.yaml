@@ -4,7 +4,7 @@ metadata:
   name: pypi
 spec:
   hostnames:
-    - pypi.secoder.net
+    - pypi.t.secoder.net
   rules:
     - matches:
         - path:

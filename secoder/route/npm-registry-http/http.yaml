@@ -4,7 +4,7 @@ metadata:
   name: npm-registry
 spec:
   hostnames:
-    - npm-registry.secoder.net
+    - npm-registry.t.secoder.net
   rules:
     - backendRefs:
         - name: npm-registry
