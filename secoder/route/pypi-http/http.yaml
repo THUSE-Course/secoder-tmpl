@@ -41,7 +41,7 @@ spec:
           urlRewrite:
             path:
               type: ReplacePrefixMatch
-              replacePrefixMatch: /root/pypi
+              replacePrefixMatch: /root/pypi/+f/
       backendRefs:
         - name: devpi
           port: 3141
@@ -54,7 +54,7 @@ spec:
           urlRewrite:
             path:
               type: ReplacePrefixMatch
-              replacePrefixMatch: /root/pypi
+              replacePrefixMatch: /root/pypi/+f/
       backendRefs:
         - name: devpi
           port: 3141
