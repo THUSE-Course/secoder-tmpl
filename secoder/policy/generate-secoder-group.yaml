@@ -19,11 +19,14 @@ spec:
       expression: "'secoder' in object.metadata.labels"
     - name: group
       expression: "object.metadata.name.startsWith('g-')"
+    # Existing group namespaces are annotated separately during migration.
+    - name: members
+      expression: "has(object.metadata.annotations) && 'secoder/members' in object.metadata.annotations"
   variables:
     - name: ns
       expression: "object.metadata.name"
     - name: targets
-      expression: "object.metadata.labels['secoder'].split('.')"
+      expression: "object.metadata.annotations['secoder/members'].split('.')"
   generate:
     - expression: |
         variables.targets.all(i,
