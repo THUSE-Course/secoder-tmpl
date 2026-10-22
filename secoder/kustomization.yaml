@@ -7,3 +7,22 @@ resources:
   - route/
   - rbac/
   - policy/
+images:
+  - name: ghcr.io/thuse-course/secoder-backend
+    newTag: 0.1.7
+    digest: sha256:01c149b089b15ba1252d8c4bdfe6ae618b5fa6feed081f316d762fadc7bc07ad
+  - name: ghcr.io/thuse-course/secoder-frontend
+    newTag: 0.1.5
+    digest: sha256:b810ec19c9e2be50c096badc44c619f807de33b9c930ffcba402b6d453c6d4c9
+  - name: ghcr.io/thuse-course/secoder-reconciler
+    newTag: 0.1.1
+    digest: sha256:e6bb3afea820d89bc8cfaeaac0f9f786e514024f35afe0ad1a33ab8830664427
+  - name: ghcr.io/thuse-course/secoder-exporter
+    newTag: 0.1.1
+    digest: sha256:27e4376fb4f134d4bba9e5b888d373b7bf5df952be13e2468e5346f4d489494b
+  - name: ghcr.io/thuse-course/secoder-pypi
+    newTag: 0.1.2
+    digest: sha256:2480e87563ed481dd2b08e6a4c71a7c5424f9823273b2f8b88a0e51276fa71a4
+  - name: ghcr.io/thuse-course/secoder-registry
+    newTag: 0.1.2
+    digest: sha256:ceb56208b094c693dfa04d93ff9431b6a8ff649db453147d6ac81f11199cdf08
